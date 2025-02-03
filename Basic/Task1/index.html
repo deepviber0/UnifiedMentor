@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        body{
+            margin:0;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            height:97vh;
+            background-color: aliceblue;
+        }
+        .button {
+            border: 0;
+            border-radius: 40px;
+            color: white;
+            background-color: rgb(32, 34, 35);
+            cursor: pointer;
+            width: 56px;
+            height: 35px;
+            user-select: none;
+            font-size: 20px;
+        }
+        #line{
+            grid-column: span 4;
+            text-align: right;
+            font-size: 37px;
+            color:grey;
+            font-weight: lighter;
+
+        }
+        
+        #full {
+            display:grid;
+            grid-template-columns: repeat(4,auto);
+            gap:15px;
+            justify-content: center;
+            align-items: center;
+            background-color:white;
+            border-radius: 9px;
+            padding: 20px;
+            padding-top: 10px;
+            height:420px;
+            width:325px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        #buttonop{
+            background-color: aquamarine;
+            font-size: 20px;
+        }
+        #buttonequal{
+            background-color: bisque;
+            font-size: 20px;
+        }
+
+
+        @media screen and (min-width:798px){
+            .button {
+                border: 0;
+                border-radius: 40px;
+                color: white;
+                background-color: rgb(32, 34, 35);
+                cursor: pointer;
+                width: 110px;
+                height: 70px;
+                user-select: none;
+                font-size: 35px;
+            }
+            #line{
+                grid-column: span 4;
+                text-align: right;
+                font-size: 37px;
+                color:grey;
+                font-weight: lighter;
+    
+            }
+            
+            #full {
+                display:grid;
+                grid-template-columns: repeat(4,auto);
+                gap:15px;
+                justify-content: center;
+                align-items: center;
+                background-color:white;
+                border-radius: 9px;
+                padding: 20px;
+                padding-top: 10px;
+                height:600px;
+                width:550px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+            #buttonop{
+                background-color: aquamarine;
+                font-size: 36px;
+            }
+            #buttonequal{
+                background-color: bisque;
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="full">
+        <p id="line">Calculator</p>
+        <button class="button" onclick="clears()">AC</button>
+        <button class="button" onclick="append('^')">^</button>
+        <button class="button" onclick="append('%')">&percnt;</button>
+        <button class="button" onclick="stepclr()">⌫</button>
+
+
+        <button class="button" onclick="append('1')">1</button>
+        <button class="button" onclick="append('2')">2</button>
+        <button class="button" onclick="append('3')">3</button>
+        <button id="buttonop" class="button" onclick="append('/')">&divide;</button>
+        <button class="button" onclick="append('4')">4</button>
+        <button class="button" onclick="append('5')">5</button> 
+       <button class="button" onclick="append('6')">6</button>
+        <button id="buttonop" class="button" onclick="append('×')">&times;</button>
+        <button class="button" onclick="append('7')">7</button>
+        <button class="button" onclick="append('8')">8</button>
+        <button class="button" onclick="append('9')">9</button>
+        <button id="buttonop" class="button" onclick="append('-')">&minus;</button>
+        <button class="button" onclick="append('0')">0</button>
+        <button class="button" onclick="append('.')">.</button>
+        <button id="buttonequal" class="button" onclick="equal('=')">&equals;</button>
+        <button id="buttonop" class="button" onclick="append('+')">&plus;</button>
+</div>
+<script>
+    const resdisplay=document.getElementById("line");
+    let val=""
+    function stepclr(){
+        if(val.length>0){
+            val=val.slice(0, -1);
+            resdisplay.innerText=val|| 0;
+        }
+    }
+    function clears(){
+        val=""
+        let cals=resdisplay;
+        cals.textContent="Calculator";
+        cals.style.color="Grey";
+        cals.style.fontWeight="lighter";
+
+
+    }
+    function append(value){
+        val+=value;
+        resdisplay.innerText=val;
+        console.log(value)
+       
+        resdisplay.style.color="black";
+        resdisplay.style.fontWeight="300px";
+    }
+    function equal(ch){
+        try {
+            const expression = val.replace(/×/g, "").replace(/\^/g,"*");
+            const ev = eval(expression);  
+            
+                val = ev;
+            
+                resdisplay.innerText = ev;
+            
+           
+        } catch (error) {
+            resdisplay.innerText = "Expression Error";
+            val = "";
+        }
+    }
+   
+</script>
+</body>
+</html>
