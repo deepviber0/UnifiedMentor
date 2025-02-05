@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+</head>
+
+<body>
+    <div class="outer">
+        <label for="inp">Location</label>
+        <input type="text" id="inp" placeholder="Enter Location">
+        <input type="submit" onclick="getweather()">
+        <div id="weatherResult"></div>
+    </div>
+    <p id="loadingMessage" style="display:none">Loading..</p>
+    <script>
+        function getweather() {
+            const loc = document.getElementById("inp").value;
+            const apikey = '3a081097eebd5430adba54f0dbac42f5';
+            document.getElementById("loadingMessage").style.display = "block"; // Show loading message
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${loc}&appid=${apikey}&units=metric`)
+                .then(response => response.json())
+                .then((data) => {
+                    document.getElementById("loadingMessage").style.display = "none"; // Hide loading message
+
+                    if (data.main) {
+                        // Get the icon code
+                        let iconCode = data.weather[0].icon;
+                        let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+                        // Create an image element
+                        let img = document.createElement('img');
+                        img.src = iconUrl;
+                        img.alt = "Weather Icon";
+                        img.style.width = "100px";
+                        img.style.height = "100px";
+                        
+                        document.getElementById("weatherResult").innerHTML = `
+                            <h2>Weather in ${loc}</h2>
+                            <p>🌡️ Temperature: ${data.main.temp.toFixed(2)}°C</p>
+                            <p>Humidity: ${data.main.humidity}%</p>
+                            <p>Weather: ${data.weather[0].description}</p>
+                        `;
+                        document.getElementById("weatherResult").appendChild(img);
+                    } else {
+                        document.getElementById("weatherResult").innerHTML = "Error: Invalid location or API issue.";
+                    }
+
+                })
+                .catch(err => {
+                    document.getElementById("loadingMessage").style.display = "none"; 
+                    console.error(err);
+                    document.getElementById("weatherResult").innerHTML = "Error: Unable to fetch weather data.";
+                });
+        }
+    </script>
+</body>
+
+</html>
