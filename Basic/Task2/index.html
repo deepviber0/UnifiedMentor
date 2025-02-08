@@ -5,53 +5,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather</title>
+    <style>
+        body{
+            background-color: rgb(136, 193, 254);
+        }
+        .outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 97vh;
+            
+        }
+
+        .inner {
+            width: 330px;
+            height: 330px;
+            background: linear-gradient(40deg, rgb(193, 7, 250), rgb(19, 255, 251));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgb(255, 220, 220);
+            
+        }
+
+        .inner:hover{
+            border: 1px solid rgb(17, 241, 174);
+            box-shadow: 0px 3px 8px black;
+        }
+        
+        .search-container {
+            display: flex;
+           
+            gap: 5px;
+        }
+
+        .op {
+            height: 30px;
+            width: 180px;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        ::placeholder {
+            text-align: center;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-weight: lighter;
+            color: rgb(72, 182, 241);
+        }
+
+        .button {
+            background-image: url('searchbar.jpg');
+            background-size: cover;
+            background-position: center;
+            width: 35px;
+            height: 35px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #header{
+            color: rgb(246, 214, 235);
+        }
+        #weatherResult {
+            text-align: center;
+            margin-top: 10px;
+        }
+        #err{
+            margin-bottom: 85px;
+            color: antiquewhite;
+            font-size: 18px;
+        }
+
+        #msg{
+            margin-bottom: 25px;
+        }
+    </style>
 </head>
 
 <body>
     <div class="outer">
-        <label for="inp">Location</label>
-        <input type="text" id="inp" placeholder="Enter Location">
-        <input type="submit" onclick="getweather()">
-        <div id="weatherResult"></div>
+        <div class="inner">
+            <div id="weatherResult"></div>
+            
+            <div class="search-container">
+                <input type="text" id="inp" class="op" placeholder="Enter Location">
+                <button class="button" onclick="getweather()"></button>
+            </div>
+
+            <p id="loadingMessage" style="display:none">Loading..</p>
+        </div>
     </div>
-    <p id="loadingMessage" style="display:none">Loading..</p>
+
     <script>
         function getweather() {
-            const loc = document.getElementById("inp").value;
+            const str = document.getElementById("inp").value;
+            let loc = str[0].toUpperCase() + str.slice(1);
             const apikey = '3a081097eebd5430adba54f0dbac42f5';
             document.getElementById("loadingMessage").style.display = "block"; // Show loading message
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${loc}&appid=${apikey}&units=metric`)
                 .then(response => response.json())
                 .then((data) => {
                     document.getElementById("loadingMessage").style.display = "none"; // Hide loading message
-
                     if (data.main) {
-                        // Get the icon code
                         let iconCode = data.weather[0].icon;
                         let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
 
-                        // Create an image element
-                        let img = document.createElement('img');
-                        img.src = iconUrl;
-                        img.alt = "Weather Icon";
-                        img.style.width = "100px";
-                        img.style.height = "100px";
-                        
-                        document.getElementById("weatherResult").innerHTML = `
-                            <h2>Weather in ${loc}</h2>
-                            <p>🌡️ Temperature: ${data.main.temp.toFixed(2)}°C</p>
+                        document.getElementById("weatherResult").innerHTML = `<div id="msg">
+                            <h2 id="header">Weather in ${loc}</h2>
+                            <p>Temperature: ${data.main.temp.toFixed(2)}°C</p>
                             <p>Humidity: ${data.main.humidity}%</p>
                             <p>Weather: ${data.weather[0].description}</p>
-                        `;
-                        document.getElementById("weatherResult").appendChild(img);
+                        </div>`;
                     } else {
-                        document.getElementById("weatherResult").innerHTML = "Error: Invalid location or API issue.";
+                        document.getElementById("weatherResult").innerHTML = `<p id="err">Error: Invalid Location or API Issue.</p>`;
                     }
-
                 })
                 .catch(err => {
-                    document.getElementById("loadingMessage").style.display = "none"; 
-                    console.error(err);
+                    document.getElementById("loadingMessage").style.display = "none";
                     document.getElementById("weatherResult").innerHTML = "Error: Unable to fetch weather data.";
                 });
         }
