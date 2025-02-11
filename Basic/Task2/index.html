@@ -88,14 +88,20 @@
         #msg{
             margin-bottom: 25px;
         }
+       #heads{
+        margin-right: 20px;
+        color:rgb(254, 207, 174);
+        font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+       }
     </style>
 </head>
 
 <body>
+
     <div class="outer">
         <div class="inner">
             <div id="weatherResult"></div>
-            
+            <h2 id="heads">Weather App</h2>
             <div class="search-container">
                 <input type="text" id="inp" class="op" placeholder="Enter Location">
                 <button class="button" onclick="getweather()"></button>
@@ -106,7 +112,9 @@
     </div>
 
     <script>
-        function getweather() {
+        const heads=document.getElementById("heads");
+            function getweather() {
+            heads.style.display="none";
             const str = document.getElementById("inp").value;
             let loc = str[0].toUpperCase() + str.slice(1);
             const apikey = '3a081097eebd5430adba54f0dbac42f5';
@@ -117,14 +125,21 @@
                     document.getElementById("loadingMessage").style.display = "none"; // Hide loading message
                     if (data.main) {
                         let iconCode = data.weather[0].icon;
-                        let iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
-
+                        let iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                       // console.log(data)
+                       
                         document.getElementById("weatherResult").innerHTML = `<div id="msg">
                             <h2 id="header">Weather in ${loc}</h2>
                             <p>Temperature: ${data.main.temp.toFixed(2)}°C</p>
                             <p>Humidity: ${data.main.humidity}%</p>
                             <p>Weather: ${data.weather[0].description}</p>
+                            <div id="imgg"></div>
+
                         </div>`;
+                        let im=document.createElement("img")
+                        im.src=iconUrl;
+                        im.alt = "Weather Icon";
+                        document.getElementById("imgg").appendChild(im)
                     } else {
                         document.getElementById("weatherResult").innerHTML = `<p id="err">Error: Invalid Location or API Issue.</p>`;
                     }
